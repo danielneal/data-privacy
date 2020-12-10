@@ -1,0 +1,5 @@
+* Add styling
+* Add "this message will expire in {x} days"
+* Host somewhere (heroku?)
+* Replace fs calls with e.g dynamoDB or some kv store
+* Rate limit by ip? to prevent dos
