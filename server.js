@@ -48,10 +48,6 @@ app.get("/viewData", function (req, res) {
   const data = decrypt(key, encryptedData);
   const expiresAtDate = parse(expiresAt, "yyyy-MM-dd", new Date());
 
-  console.log(expiresAtDate);
-  console.log(startOfDay(new Date()));
-  console.log(isAfter(startOfDay(new Date()), expiresAtDate));
-
   if (isAfter(startOfDay(new Date()), expiresAtDate)) {
     fs.unlinkSync(`/tmp/${id}.json`);
     res.render("expired");
