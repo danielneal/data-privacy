@@ -14,6 +14,7 @@ let { randomKey, encrypt, decrypt } = require("./encrypt.js");
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
 app.engine("mustache", mustacheExpress());
+app.use(express.static("public"));
 
 let db = {};
 
