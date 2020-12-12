@@ -27,7 +27,7 @@ exports.saveInformation = function saveInformation(information) {
   return client.query(
     `
 INSERT INTO shared_information(id, expires_at, encrypted_data)
-VALUES ($1, $2, $)
+VALUES ($1, $2, $3)
  `,
     [information.id, information.expiresAt, information.encryptedData]
   );
