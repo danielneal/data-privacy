@@ -9,18 +9,22 @@ const client = new Client({
 
 client.connect();
 
-exports.migrate = async function migrate() {
-  client.query(`
+exports.migrate = function migrate() {
+  return client
+    .query(
+      `
 CREATE TABLE IF NOT EXISTS shared_information(
   id uuid PRIMARY KEY,
   expires_at DATE,
   encrypted_data TEXT
 )
-`);
+`
+    )
+    .then(client.end());
 };
 
-exports.saveInformation = async function saveInformation(information) {
-  client.query(
+exports.saveInformation = function saveInformation(information) {
+  return client.query(
     `
 INSERT INTO shared_information(id, expires_at, encrypted_data)
 VALUES ($1, $2, $)
@@ -29,12 +33,12 @@ VALUES ($1, $2, $)
   );
 };
 
-exports.getInformationById = async function informationById(id) {
-  client
+exports.getInformationById = function informationById(id) {
+  return client
     .query(` SELECT * FROM shared_information WHERE id=$1`, [id])
     .then((res) => res.rows[0]);
 };
 
-exports.deleteInformationById = async function informationById(id) {
-  client.query(`DELETE FROM shared_information WHERE id=$1`, [id]);
+exports.deleteInformationById = function informationById(id) {
+  return client.query(`DELETE FROM shared_information WHERE id=$1`, [id]);
 };
