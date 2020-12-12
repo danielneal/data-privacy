@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS shared_information(
 )
 `
     )
-    .then(client.end());
+    .then((res) => client.end());
 };
 
 exports.saveInformation = function saveInformation(information) {
