@@ -58,7 +58,7 @@ app.get("/viewData", async function (req, res) {
   if (information === null) {
     res.redirect("/expiredData");
   }
-  const { encryptedData, expiresAt } = JSON.parse(file);
+  const { encryptedData, expiresAt } = information;
   const data = decrypt(key, encryptedData);
   const expiresAtDate = parse(expiresAt, "yyyy-MM-dd", new Date());
 
