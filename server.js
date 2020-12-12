@@ -61,7 +61,8 @@ app.get("/viewData", async function (req, res) {
   const { encryptedData, expiresAt } = information;
   const data = decrypt(key, encryptedData);
   const expiresAtDate = parse(expiresAt, "yyyy-MM-dd", new Date());
-
+  console.log(data);
+  console.log(expiresAtDate);
   if (isAfter(startOfDay(new Date()), expiresAtDate)) {
     await deleteInformationById(id);
     res.render("expiredData");

@@ -24,18 +24,22 @@ CREATE TABLE IF NOT EXISTS shared_information(
 };
 
 exports.saveInformation = function saveInformation(information) {
-  return client.query(
-    `
+  return client
+    .query(
+      `
 INSERT INTO shared_information(id, expires_at, encrypted_data)
 VALUES ($1, $2, $3)
  `,
-    [information.id, information.expiresAt, information.encryptedData]
-  );
+      [information.id, information.expiresAt, information.encryptedData]
+    )
+    .catch((err) => {
+      return null;
+    });
 };
 
 exports.getInformationById = function informationById(id) {
   return client
-    .query(` SELECT * FROM shared_information WHERE id=$1`, [id])
+    .query(`SELECT * FROM shared_information WHERE id=$1`, [id])
     .then((res) => {
       const result = res.rows[0];
       if (result !== undefined) {
@@ -47,6 +51,9 @@ exports.getInformationById = function informationById(id) {
       } else {
         return null;
       }
+    })
+    .catch((err) => {
+      return null;
     });
 };
 
