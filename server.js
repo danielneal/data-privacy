@@ -1,15 +1,16 @@
 const { v4: uuidv4 } = require("uuid");
-let express = require("express");
-let mustacheExpress = require("mustache-express");
-let bodyParser = require("body-parser");
-let fs = require("fs");
-let isAfter = require("date-fns/isAfter");
-let add = require("date-fns/add");
-let parse = require("date-fns/parse");
-let startOfDay = require("date-fns/startOfDay");
-let format = require("date-fns/format");
-let app = express();
-let { randomKey, encrypt, decrypt } = require("./encrypt.js");
+const PORT = process.env.PORT || 3000;
+const express = require("express");
+const mustacheExpress = require("mustache-express");
+const bodyParser = require("body-parser");
+const fs = require("fs");
+const isAfter = require("date-fns/isAfter");
+const add = require("date-fns/add");
+const parse = require("date-fns/parse");
+const startOfDay = require("date-fns/startOfDay");
+const format = require("date-fns/format");
+const app = express();
+const { randomKey, encrypt, decrypt } = require("./encrypt.js");
 
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
@@ -83,6 +84,6 @@ app.post(
   }
 );
 
-app.listen(3000, function () {
-  console.log("Server started");
+app.listen(PORT, function () {
+  console.log(`Server started on ${PORT}`);
 });
