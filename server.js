@@ -13,6 +13,7 @@ const app = express();
 const { randomKey, encrypt, decrypt } = require("./encrypt.js");
 const helmet = require("helmet");
 const expressEnforcesSSL = require("express-enforces-ssl");
+const { testDb } = require("./db.js");
 
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
@@ -21,6 +22,7 @@ app.enable("trust proxy");
 app.use(expressEnforcesSSL());
 app.use(helmet());
 app.use(express.static("public"));
+testDb();
 
 const pageTitle = "Data Privacy";
 
