@@ -14,8 +14,9 @@ let { randomKey, encrypt, decrypt } = require("./encrypt.js");
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
 app.engine("mustache", mustacheExpress());
+app.use(express.static("public"));
 
-let db = {};
+const pageTitle = "Data Privacy";
 
 app.get("/", function (req, res) {
   res.redirect("/enterData");
@@ -26,9 +27,13 @@ app.get("/enterData", function (req, res) {
   const defaultExpiry = format(add(new Date(), { days: 30 }), "yyyy-MM-dd");
   res.render("enterData", {
     id: id,
-    pageTitle: "Data Privacy",
+    pageTitle: pageTitle,
     defaultExpiry: defaultExpiry,
   });
+});
+
+app.get("/expiredData", function (req, res) {
+  res.render("expiredData", { pageTitle: pageTitle });
 });
 
 app.get("/viewData", function (req, res) {
@@ -42,7 +47,7 @@ app.get("/viewData", function (req, res) {
     file = null;
   }
   if (file === null) {
-    res.render("expired");
+    res.redirect("/expiredData");
   }
   const { encryptedData, expiresAt } = JSON.parse(file);
   const data = decrypt(key, encryptedData);
@@ -50,9 +55,9 @@ app.get("/viewData", function (req, res) {
 
   if (isAfter(startOfDay(new Date()), expiresAtDate)) {
     fs.unlinkSync(`/tmp/${id}.json`);
-    res.render("expired");
+    res.render("expiredData");
   } else {
-    res.render("viewData", { data: data, pageTitle: "Data Privacy" });
+    res.render("viewData", { data: data, pageTitle: pageTitle });
   }
 });
 
@@ -74,7 +79,7 @@ app.post(
     const protocol = req.secure ? "https" : "http";
     const host = req.headers.host;
     const link = `${protocol}://${host}/viewData?id=${id}&key=${key}`;
-    res.render("shareLink", { link: link, pageTitle: "Data Privacy" });
+    res.render("shareLink", { link: link, pageTitle: pageTitle });
   }
 );
 
