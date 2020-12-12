@@ -59,12 +59,10 @@ app.get("/viewData", async function (req, res) {
   }
   const { encryptedData, expiresAt } = information;
   const data = decrypt(key, encryptedData);
-  console.log(information);
-  console.log(expiresAt);
-  console.log(typeof expiresAt);
+
   if (isAfter(startOfDay(new Date()), expiresAt)) {
     await deleteInformationById(id);
-    res.render("expiredData");
+    res.redirect("/expiredData");
   } else {
     res.render("viewData", { data: data, pageTitle: pageTitle });
   }
