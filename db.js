@@ -30,7 +30,9 @@ VALUES ($1, $2, $)
 };
 
 exports.getInformationById = async function informationById(id) {
-  client.query(` SELECT * FROM shared_information WHERE id=$1`, [id]);
+  client
+    .query(` SELECT * FROM shared_information WHERE id=$1`, [id])
+    .then((res) => res.rows[0]);
 };
 
 exports.deleteInformationById = async function informationById(id) {
