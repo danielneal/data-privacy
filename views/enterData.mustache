@@ -1,12 +1,12 @@
-<html>
+<html class="h-full">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/css/compiled.css" rel="stylesheet">
   </head>
-  <body>
-    <div class="bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 w-full h-full flex flex-col items-stretch sm:items-center"/>
+  <body class="w-full h-full bg-fixed bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500">
+    <div class="flex flex-col items-stretch sm:items-center"/>
     <form class="flex flex-col items-stretch p-3" action="/saveData" method="post">
-      <h1 class="text-center text-xl font-bold mb-3">{{pageTitle}}</h1>
+      <a href="/" class="text-center text-xl font-bold mb-3">{{pageTitle}}</a>
       <input type="hidden" name="id" value="{{id}}">
       <label class="text-sm mb-1" for="data">Information to share</label>
       <textarea class="rounded p-2 mb-3 text-sm" name="data" rows="10" cols="50" required></textarea>

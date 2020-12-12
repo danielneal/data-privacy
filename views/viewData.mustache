@@ -1,12 +1,17 @@
-<html>
+<html class="h-full">
   <head>
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <link href="/css/compiled.css" rel="stylesheet">
   </head>
-  <body>
-      <div>
-        <h1>{{pageTitle}}</h1>
-        <h3>{{data}}</h3>
+  <body class="bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500 w-full h-full">
+      <div class="flex flex-col items-stretch sm:items-center p-3">
+        <a href="/" class="text-center text-xl font-bold mb-3">{{pageTitle}}</a>
+        <div class="sm:w-1/2 flex flex-col items-stretch">
+          <label class="text-sm mb-1">Shared information</label>
+          <div class="bg-white rounded p-3">
+            <p class="text-sm whitespace-pre-wrap">{{data}}</p>
+          </div>
+        </div>
       </div>
    </body>
 </html>
