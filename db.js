@@ -36,7 +36,18 @@ VALUES ($1, $2, $3)
 exports.getInformationById = function informationById(id) {
   return client
     .query(` SELECT * FROM shared_information WHERE id=$1`, [id])
-    .then((res) => res.rows[0]);
+    .then((res) => {
+      const result = res.rows[0];
+      if (result !== undefined) {
+        return {
+          id: result.id,
+          encryptedData: result.encrypted_data,
+          expiresAt: result.expires_at,
+        };
+      } else {
+        return null;
+      }
+    });
 };
 
 exports.deleteInformationById = function informationById(id) {
