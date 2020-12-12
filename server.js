@@ -11,10 +11,12 @@ const startOfDay = require("date-fns/startOfDay");
 const format = require("date-fns/format");
 const app = express();
 const { randomKey, encrypt, decrypt } = require("./encrypt.js");
+const helmet = require("helmet");
 
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
 app.engine("mustache", mustacheExpress());
+app.use(helmet());
 app.use(express.static("public"));
 
 const pageTitle = "Data Privacy";
