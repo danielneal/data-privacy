@@ -16,6 +16,7 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
+    "migrate": "node -e 'require(\"./db.js\").migrate()'",
     "start": "node server.js",
     "dev": "yarn nodemon -e js,mustache server.js",
     "css": "postcss public/css/tailwind.css -o public/css/compiled.css",
