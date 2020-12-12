@@ -2,6 +2,7 @@ TODO
 * Fix the error that happens when you browser back and reshare (should write over existing data)
 * Add "this message will expire in {x} days"
 * Rate limit by ip? to prevent dos
+* Client side encryption
 
 DONE
 * Add styling
