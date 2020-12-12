@@ -5,7 +5,6 @@ const mustacheExpress = require("mustache-express");
 const bodyParser = require("body-parser");
 const isAfter = require("date-fns/isAfter");
 const add = require("date-fns/add");
-const parseISO = require("date-fns/parseISO");
 const startOfDay = require("date-fns/startOfDay");
 const format = require("date-fns/format");
 const app = express();
@@ -60,10 +59,10 @@ app.get("/viewData", async function (req, res) {
   }
   const { encryptedData, expiresAt } = information;
   const data = decrypt(key, encryptedData);
-  const expiresAtDate = parseISO(expiresAt);
   console.log(information);
-  console.log(expiresAtDate);
-  if (isAfter(startOfDay(new Date()), expiresAtDate)) {
+  console.log(expiresAt);
+  console.log(typeof expiresAt);
+  if (isAfter(startOfDay(new Date()), expiresAt)) {
     await deleteInformationById(id);
     res.render("expiredData");
   } else {
