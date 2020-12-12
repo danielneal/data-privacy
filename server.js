@@ -3,7 +3,6 @@ const PORT = process.env.PORT || 3000;
 const express = require("express");
 const mustacheExpress = require("mustache-express");
 const bodyParser = require("body-parser");
-const fs = require("fs");
 const isAfter = require("date-fns/isAfter");
 const add = require("date-fns/add");
 const parse = require("date-fns/parse");
@@ -13,7 +12,12 @@ const app = express();
 const { randomKey, encrypt, decrypt } = require("./encrypt.js");
 const helmet = require("helmet");
 const expressEnforcesSSL = require("express-enforces-ssl");
-const { testDb } = require("./db.js");
+const {
+  migrate,
+  getInformationById,
+  deleteInformationById,
+  saveInformation,
+} = require("./db.js");
 
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
@@ -22,7 +26,6 @@ app.enable("trust proxy");
 app.use(expressEnforcesSSL());
 app.use(helmet());
 app.use(express.static("public"));
-testDb();
 
 const pageTitle = "Data Privacy";
 
@@ -44,17 +47,15 @@ app.get("/expiredData", function (req, res) {
   res.render("expiredData", { pageTitle: pageTitle });
 });
 
-app.get("/viewData", function (req, res) {
+app.get("/viewData", async function (req, res) {
   const { id, key } = req.query;
-  let file;
+  let information;
   try {
-    file = fs.readFileSync(`/tmp/${id}.json`, {
-      encoding: "utf8",
-    });
+    information = await getInformationById(id);
   } catch (err) {
-    file = null;
+    information = null;
   }
-  if (file === null) {
+  if (information === null) {
     res.redirect("/expiredData");
   }
   const { encryptedData, expiresAt } = JSON.parse(file);
@@ -62,7 +63,7 @@ app.get("/viewData", function (req, res) {
   const expiresAtDate = parse(expiresAt, "yyyy-MM-dd", new Date());
 
   if (isAfter(startOfDay(new Date()), expiresAtDate)) {
-    fs.unlinkSync(`/tmp/${id}.json`);
+    await deleteInformationById(id);
     res.render("expiredData");
   } else {
     res.render("viewData", { data: data, pageTitle: pageTitle });
@@ -72,18 +73,16 @@ app.get("/viewData", function (req, res) {
 app.post(
   "/saveData",
   express.urlencoded({ extended: true }),
-  function (req, res) {
+  async function (req, res) {
     const { id, data, expiresAt } = req.body;
     const key = randomKey();
     const encryptedData = encrypt(key, data);
-    fs.writeFileSync(
-      `/tmp/${id}.json`,
-      JSON.stringify({
-        encryptedData: encryptedData,
-        expiresAt: expiresAt,
-      }),
-      { encoding: "utf8" }
-    );
+    await saveInformation({
+      id: id,
+      encryptedData: encryptedData,
+      expiresAt: expiresAt,
+    });
+
     const protocol = req.secure ? "https" : "http";
     const host = req.headers.host;
     const link = `${protocol}://${host}/viewData?id=${id}&key=${key}`;

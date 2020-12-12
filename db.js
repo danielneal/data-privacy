@@ -9,15 +9,30 @@ const client = new Client({
 
 client.connect();
 
-exports.testDb = function testDb() {
+exports.migrate = async function migrate() {
+  client.query(`
+CREATE TABLE IF NOT EXISTS shared_information(
+  id uuid PRIMARY KEY,
+  expires_at DATE,
+  encrypted_data TEXT
+)
+`);
+};
+
+exports.saveInformation = async function saveInformation(information) {
   client.query(
-    "SELECT table_schema,table_name FROM information_schema.tables;",
-    (err, res) => {
-      if (err) throw err;
-      for (let row of res.rows) {
-        console.log(JSON.stringify(row));
-      }
-      client.end();
-    }
+    `
+INSERT INTO shared_information(id, expires_at, encrypted_data)
+VALUES ($1, $2, $)
+ `,
+    [information.id, information.expiresAt, information.encryptedData]
   );
+};
+
+exports.getInformationById = async function informationById(id) {
+  client.query(` SELECT * FROM shared_information WHERE id=$1`, [id]);
+};
+
+exports.deleteInformationById = async function informationById(id) {
+  client.query(`DELETE FROM shared_information WHERE id=$1`, [id]);
 };
