@@ -22,7 +22,6 @@ app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
 app.engine("mustache", mustacheExpress());
 app.enable("trust proxy");
-app.use(expressEnforcesSSL());
 app.use(helmet());
 app.use(express.static("public"));
 
