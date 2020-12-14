@@ -22,7 +22,7 @@ app.set("views", `${__dirname}/views`);
 app.set("view engine", "mustache");
 app.engine("mustache", mustacheExpress());
 app.enable("trust proxy");
-app.use(helmet());
+// app.use(helmet());
 app.use(express.static("public"));
 
 const pageTitle = "Data Privacy";
@@ -34,15 +34,19 @@ app.get("/", function (req, res) {
 app.get("/enterData", function (req, res) {
   const id = uuidv4();
   const defaultExpiry = format(add(new Date(), { days: 30 }), "yyyy-MM-dd");
+  const siteRoot = getURLFromRequest(req);
+
   res.render("enterData", {
-    id: id,
-    pageTitle: pageTitle,
-    defaultExpiry: defaultExpiry,
+    id,
+    pageTitle,
+    defaultExpiry,
+    siteRoot,
   });
 });
 
 app.get("/expiredData", function (req, res) {
-  res.render("expiredData", { pageTitle: pageTitle });
+  const siteRoot = getURLFromRequest(req);
+  res.render("expiredData", { pageTitle, siteRoot });
 });
 
 app.get("/viewData", async function (req, res) {
@@ -63,29 +67,41 @@ app.get("/viewData", async function (req, res) {
     await deleteInformationById(id);
     res.redirect("/expiredData");
   } else {
-    res.render("viewData", { data: data, pageTitle: pageTitle });
+    const siteRoot = getURLFromRequest(req);
+    res.render("viewData", { data, pageTitle, siteRoot, id });
   }
 });
 
-app.post(
-  "/saveData",
-  express.urlencoded({ extended: true }),
-  async function (req, res) {
-    const { id, data, expiresAt } = req.body;
-    const key = randomKey();
-    const encryptedData = encrypt(key, data);
-    await saveInformation({
-      id: id,
-      encryptedData: encryptedData,
-      expiresAt: expiresAt,
-    });
+app.post("/saveData", express.urlencoded({ extended: true }), async function (
+  req,
+  res
+) {
+  const { id, data, expiresAt } = req.body;
+  const key = randomKey();
+  const encryptedData = encrypt(key, data);
+  await saveInformation({
+    id: id,
+    encryptedData: encryptedData,
+    expiresAt: expiresAt,
+  });
 
-    const protocol = req.secure ? "https" : "http";
-    const host = req.headers.host;
-    const link = `${protocol}://${host}/viewData?id=${id}&key=${key}`;
-    res.render("shareLink", { link: link, pageTitle: pageTitle });
-  }
-);
+  const link = `/viewData?id=${id}&key=${key}`;
+  const siteRoot = getURLFromRequest(req);
+
+  res.render("shareLink", { link, pageTitle, siteRoot });
+});
+
+app.post("/deleteData", express.urlencoded({ extended: true }), (req, res) => {
+  const { id } = req.body;
+  deleteInformationById(id);
+  res.redirect("/"); // TODO confirm screen
+});
+
+const getURLFromRequest = (req) => {
+  const protocol = req.secure ? "https" : "http";
+  const host = req.headers.host;
+  return `${protocol}://${host}`;
+};
 
 app.listen(PORT, function () {
   console.log(`Server started on ${PORT}`);

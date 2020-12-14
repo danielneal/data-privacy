@@ -4,6 +4,8 @@ TODO
 * Add "this message will expire in {x} days"
 * Rate limit by ip? to prevent dos
 * Client side encryption
+* Add postcss as a build step
+* Make work in Safari
 
 DONE
 * Add styling

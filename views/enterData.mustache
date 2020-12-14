@@ -1,7 +1,7 @@
 <html class="h-full">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="/css/compiled.css" rel="stylesheet">
+    <link href="{{siteRoot}}/css/compiled.css" rel="stylesheet">
   </head>
   <body class="w-full h-full bg-fixed bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500">
     <div class="flex flex-col items-stretch sm:items-center"/>
@@ -12,7 +12,7 @@
       <textarea class="rounded p-2 mb-3 text-sm" name="data" rows="10" cols="50" required></textarea>
       <label class="text-sm mb-1" for="expiresAt">Expire on</label>
       <input class="rounded text-sm p-2 mb-3" type="date" name="expiresAt" value="{{defaultExpiry}}" required >
-      <input class="hover:bg-blue-700 text-white text-bold bg-blue-900 px-3 py-1 rounded" type="submit" value="Share">
+      <button class="hover:bg-blue-700 text-white text-bold bg-blue-900 px-3 py-1 rounded" type="submit">Share</button>
     </form>
 </div>
 </body>

@@ -1,7 +1,7 @@
 <html class="h-full">
   <head>
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <link href="/css/compiled.css" rel="stylesheet">
+   <link href="{{siteRoot}}/css/compiled.css" rel="stylesheet">
   </head>
   <body class="w-full h-full bg-fixed bg-gradient-to-br from-yellow-400 via-orange-500 to-pink-500">
     <div class="flex flex-col items-stretch sm:items-center p-3">
@@ -9,7 +9,7 @@
       <div class="sm:w-1/2">
         <p class="text-sm mb-1">Your link</p>
         <div class="bg-white rounded p-3">
-          <a class="break-all text-sm underline" href="{{link}}">{{link}}</a>
+          <a class="break-all text-sm underline" href="{{siteRoot}}{{link}}">{{siteRoot}}{{link}}</a>
         </div>
       </div>
     </div>
