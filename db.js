@@ -2,9 +2,12 @@ const { Client } = require("pg");
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl:
+    process.env.NODE_ENV === "PRODUCTION"
+      ? {
+          rejectUnauthorized: false,
+        }
+      : false,
 });
 
 client.connect();
@@ -20,7 +23,9 @@ CREATE TABLE IF NOT EXISTS shared_information(
 )
 `
     )
-    .then((res) => client.end());
+    .then((res) => {
+      client.end();
+    });
 };
 
 exports.saveInformation = function saveInformation(information) {
