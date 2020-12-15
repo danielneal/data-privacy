@@ -11,18 +11,18 @@
     "helmet": "^4.2.0",
     "mustache-express": "^1.3.0",
     "pg": "^8.5.1",
-    "postcss": "^8.2.1",
     "tailwindcss": "^2.0.2",
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "build" : "yarn css-prod && node -e 'require(\"./db.js\").migrate().then(res=>console.log(res))'",
+    "css": "yarn postcss public/css/tailwind.css -o public/css/compiled.css",
+    "css-prod": "NODE_ENV=production yarn postcss ./public/css/tailwind.css -o ./public/css/compiled.css",
+    "build": "yarn css-prod && node -e 'require(\"./db.js\").migrate().then(res=>console.log(res))'",
     "start": "node server.js",
-    "dev": "yarn css && yarn nodemon -e js,mustache server.js",
-    "css": "postcss public/css/tailwind.css -o public/css/compiled.css",
-    "css-prod": "NODE_ENV=production postcss ./public/css/tailwind.css -o ./public/css/compiled.css"
+    "dev": "yarn css && yarn nodemon -e js,mustache server.js"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "postcss-cli": "^8.3.1"
   }
 }
