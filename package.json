@@ -16,9 +16,9 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "build" : "node -e 'require(\"./db.js\").migrate().then(res=>console.log(res))'",
+    "build" : "yarn css-prod && node -e 'require(\"./db.js\").migrate().then(res=>console.log(res))'",
     "start": "node server.js",
-    "dev": "yarn nodemon -e js,mustache server.js",
+    "dev": "yarn build && yarn nodemon -e js,mustache server.js",
     "css": "postcss public/css/tailwind.css -o public/css/compiled.css",
     "css-prod": "NODE_ENV=production postcss ./public/css/tailwind.css -o ./public/css/compiled.css"
   },
